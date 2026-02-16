@@ -1,4 +1,4 @@
-# my_scripts
+# DeskPulse
 
 Набор утилит для Linux/X11:
 

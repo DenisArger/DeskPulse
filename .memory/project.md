@@ -1,5 +1,8 @@
 # Project Memory
 
+## Project Name
+DeskPulse
+
 ## Назначение проекта
 Проект содержит персональные Python-скрипты для desktop-автоматизации в Linux-среде (X11 + PipeWire/PulseAudio).
 
