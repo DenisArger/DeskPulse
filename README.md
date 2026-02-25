@@ -1,35 +1,71 @@
 # DeskPulse
 
-Набор утилит для Linux/X11:
-
-- управление окнами (свернуть/восстановить),
-- стабилизация аудиовыхода (PipeWire/PulseAudio + ALSA),
-- управление громкостью колесиком мыши в зоне панели.
-
-## Файлы
-
-- `minimize_all.py` — переключает состояние окон: если есть видимые, сворачивает; если все скрыты, восстанавливает.
-- `hide_all.py` — принудительно показывает (map) верхнеуровневые окна.
-- `headphones_guard.py` — watchdog аудио: восстанавливает рабочий sink/порт при сбоях (`auto_null`, смена порта, и т.п.).
-- `taskbar_volume_hover.py` — изменение громкости колесиком в зоне панели задач (top/bottom).
-- `toggle_taskbar_wheel_volume.py` — toggle для включения/выключения режима колесика (удобно вешать на горячую клавишу).
-
-## Быстрый старт
-
+## English
+## Problem
+Linux desktop users often need small focused automations for window management, audio recovery, and panel-volume shortcuts.
+## Solution
+DeskPulse is a set of Python utilities for X11 workflows: window toggle, audio guard, and taskbar wheel volume control.
+## Tech Stack
+- Python
+- Linux/X11 utilities
+- PipeWire/PulseAudio/ALSA integration scripts
+## Architecture
+```text
+minimize_all.py
+hide_all.py
+headphones_guard.py
+taskbar_volume_hover.py
+toggle_taskbar_wheel_volume.py
+```
+```mermaid
+flowchart TD
+  A[User hotkey/command] --> B[Utility script]
+  B --> C[X11 window control]
+  B --> D[Audio stack guard]
+  B --> E[Panel wheel volume handler]
+```
+## Features
+- Minimize/restore window behavior
+- Audio sink watchdog and recovery
+- Volume control by mouse wheel on taskbar area
+- Toggle script for quick on/off workflow
+## How to Run
 ```bash
-cd /home/user/ADV/my_scripts
-./minimize_all.py
-./headphones_guard.py --watch --interval 5
+python3 minimize_all.py
+python3 headphones_guard.py --watch --interval 5
 ```
 
-Для колесика (верхняя панель):
-
-```bash
-./taskbar_volume_hover.py --panel-position top --panel-height 48 --step 2 --cooldown-ms 220 --allow-grab
+## Русский
+## Проблема
+Пользователям Linux часто нужны небольшие утилиты для управления окнами, стабилизации звука и быстрого управления громкостью.
+## Решение
+DeskPulse — это набор Python-скриптов для X11: переключение окон, audio watchdog и управление громкостью колесиком в зоне панели.
+## Стек
+- Python
+- Linux/X11 утилиты
+- Скрипты для PipeWire/PulseAudio/ALSA
+## Архитектура
+```text
+minimize_all.py
+hide_all.py
+headphones_guard.py
+taskbar_volume_hover.py
+toggle_taskbar_wheel_volume.py
 ```
-
-## Важно
-
-- В среде без X RECORD fallback-режим (`--allow-grab`) может перехватывать wheel-события у приложений.
-- Если wheel в браузере перестал работать, отключите режим колесика через `toggle_taskbar_wheel_volume.py`.
-- Для автозапуска стабилизации звука используется user service `headphones-guard.service`.
+```mermaid
+flowchart TD
+  A[Горячая клавиша/команда] --> B[Утилита]
+  B --> C[Управление окнами X11]
+  B --> D[Стабилизация аудио]
+  B --> E[Управление громкостью панели]
+```
+## Возможности
+- Сворачивание/восстановление окон
+- Watchdog аудио-выхода
+- Громкость колесиком мыши в зоне панели
+- Быстрое переключение режима on/off
+## Как запустить
+```bash
+python3 minimize_all.py
+python3 headphones_guard.py --watch --interval 5
+```
