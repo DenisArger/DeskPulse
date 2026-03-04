@@ -199,7 +199,7 @@ class HoverVolume:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Adjust headphones volume with mouse wheel when cursor is on taskbar area."
+        description="Adjust headphones volume with mouse wheel when QT icon is on taskbar area."
     )
     parser.add_argument("--sink", default="", help="Sink name. Default: auto-detect.")
     parser.add_argument("--step", type=int, default=2, help="Volume step in percent.")
