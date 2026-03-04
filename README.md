@@ -49,7 +49,7 @@ Layout switcher options:
 ```bash
 ./layout_switcher.py --hotkey Pause --layout-a us --layout-b ru --max-word-len 64 --cooldown-ms 220
 ```
-Dependencies: `python-xlib`, `xdotool`, `setxkbmap`, optional `xkb-switch`.
+Dependencies: `python-xlib`, `setxkbmap`, optional `xkb-switch`.
 Limitations: X11 only, no auto-fix on separators, and password fields cannot be reliably detected on X11.
 
 ## Russian
@@ -101,7 +101,7 @@ python3 headphones_guard.py --watch --interval 5
 ```bash
 ./layout_switcher.py --hotkey Pause --layout-a us --layout-b ru --max-word-len 64 --cooldown-ms 220
 ```
-Зависимости: `python-xlib`, `xdotool`, `setxkbmap`, опционально `xkb-switch`.
+Зависимости: `python-xlib`, `setxkbmap`, опционально `xkb-switch`.
 Ограничения: только X11, без автоисправления на разделителях, поля пароля на X11 надежно не детектируются.
 
 ## Важно

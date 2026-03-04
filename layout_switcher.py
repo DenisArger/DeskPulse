@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from typing import List
 
 from Xlib import X, XK, display
-from Xlib.ext import record
+from Xlib.ext import record, xtest
 from Xlib.protocol import rq
 
 
@@ -213,12 +213,54 @@ class LayoutSwitcher:
         return len(key_name) == 1 and not key_name.isalnum()
 
     def _type_text(self, text):
-        if text:
-            run(["xdotool", "type", "--clearmodifiers", text])
+        for ch in text:
+            self._type_char(ch)
+        self.local_d.sync()
 
     def _erase_word(self, length):
-        if length > 0:
-            run(["xdotool", "key", "--clearmodifiers", f"BackSpace", "--repeat", str(length)])
+        for _ in range(length):
+            self._press_key_name("BackSpace")
+        self.local_d.sync()
+
+    def _press_keycode(self, keycode):
+        xtest.fake_input(self.local_d, X.KeyPress, keycode)
+        xtest.fake_input(self.local_d, X.KeyRelease, keycode)
+
+    def _press_key_name(self, key_name):
+        keysym = XK.string_to_keysym(key_name)
+        if keysym == 0:
+            return
+        keycode = self.local_d.keysym_to_keycode(keysym)
+        if keycode:
+            self._press_keycode(keycode)
+
+    def _char_to_key(self, ch):
+        keysym = XK.string_to_keysym(ch)
+        if keysym == 0:
+            if len(ch) == 1:
+                codepoint = ord(ch)
+                keysym = codepoint if codepoint <= 0xFF else (0x01000000 | codepoint)
+        if keysym == 0:
+            return 0, False
+        keycode = self.local_d.keysym_to_keycode(keysym)
+        if not keycode:
+            return 0, False
+        if self.local_d.keycode_to_keysym(keycode, 0) == keysym:
+            return keycode, False
+        if self.local_d.keycode_to_keysym(keycode, 1) == keysym:
+            return keycode, True
+        return keycode, False
+
+    def _type_char(self, ch):
+        keycode, needs_shift = self._char_to_key(ch)
+        if not keycode:
+            return
+        shift_keycode = self.local_d.keysym_to_keycode(XK.string_to_keysym("Shift_L"))
+        if needs_shift and shift_keycode:
+            xtest.fake_input(self.local_d, X.KeyPress, shift_keycode)
+        self._press_keycode(keycode)
+        if needs_shift and shift_keycode:
+            xtest.fake_input(self.local_d, X.KeyRelease, shift_keycode)
 
     def _handle_hotkey(self):
         now = time.monotonic()
@@ -319,7 +361,7 @@ class LayoutSwitcher:
 
 def check_dependencies():
     missing = []
-    for tool in ("xdotool", "setxkbmap"):
+    for tool in ("setxkbmap",):
         if shutil.which(tool) is None:
             missing.append(tool)
     if missing:
